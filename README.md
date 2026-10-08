@@ -21,6 +21,10 @@ node scripts/make-icons.mjs   # rigenera le icone PWA in public/
   dieta si spuntano e valgono esattamente i valori scritti nel JSON.
 - **Progressi**: peso con media mobile 7 giorni, kcal e macro degli ultimi 7 giorni.
 - **Altro**: obiettivi, rubrica alimenti, backup/ripristino JSON.
+- **Condivisione alimenti**: *Altro → I miei alimenti → Esporta / condividi* crea un JSON
+  (`nutritrack-alimenti-AAAA-MM-GG.json`, valori per 100 g) che si può mandare a un'altra persona;
+  *Importa lista* lo unisce alla rubrica senza doppioni (codice a barre, oppure nome + marca).
+  Formato e prompt per generarlo con un'AI: `src/lib/foods-io.ts`.
 
 ## Formato dieta
 

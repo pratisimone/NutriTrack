@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { FoodForm } from '../components/FoodForm'
+import { ImportFoods } from '../components/ImportFoods'
 import { Sheet } from '../components/ui'
 import { DEFAULT_TARGETS, db, setSetting, useSetting, useTargets } from '../db'
 import { exportBackup, importBackup, wipeAll } from '../lib/backup'
+import { exportFoods } from '../lib/foods-io'
 import { DAYS } from '../lib/dates'
 import { dietForDay } from '../lib/diet'
 import { fmt, parseNum, sum } from '../lib/macros'
@@ -81,6 +83,7 @@ function TargetsForm({ targets, diet }: { targets: Macros; diet: Diet | null }) 
 function Foods() {
   const [query, setQuery] = useState('')
   const [editing, setEditing] = useState<Food | null>(null)
+  const [importing, setImporting] = useState(false)
   const foods = useLiveQuery(() => db.foods.orderBy('name').toArray(), []) ?? []
   const q = query.trim().toLowerCase()
   const list = q ? foods.filter((f) => f.name.toLowerCase().includes(q)) : foods
@@ -95,6 +98,14 @@ function Foods() {
   return (
     <section className="card">
       <h3>I miei alimenti ({foods.length})</h3>
+      <div className="row wrap">
+        <button className="btn" onClick={() => setImporting(true)}>
+          ⬇ Importa lista
+        </button>
+        <button className="btn" disabled={foods.length === 0} onClick={() => void exportFoods()}>
+          ⬆ Esporta / condividi
+        </button>
+      </div>
       {foods.length > 5 && <input type="search" className="search" placeholder="Filtra…" value={query} onChange={(e) => setQuery(e.target.value)} />}
       {foods.length === 0 && <p className="muted small">Qui compaiono gli alimenti che inserisci o scansioni.</p>}
       {list.map((f) => (
@@ -107,6 +118,7 @@ function Foods() {
           </span>
         </button>
       ))}
+      {importing && <ImportFoods onClose={() => setImporting(false)} />}
       {editing && (
         <Sheet title="Modifica alimento" onClose={() => setEditing(null)}>
           <FoodForm initial={editing} submitLabel="Salva" onSaved={() => setEditing(null)} />

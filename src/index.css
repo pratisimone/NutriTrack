@@ -763,6 +763,34 @@ textarea {
   margin: 0 -4px;
 }
 
+/* ---------- import alimenti ---------- */
+.form label.check-line {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.check-line input {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  padding: 0;
+  accent-color: var(--accent);
+}
+.ok-box {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+}
+.ok-box ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
 /* ---------- varie ---------- */
 details {
   font-size: 0.85rem;

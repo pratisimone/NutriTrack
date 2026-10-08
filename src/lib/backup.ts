@@ -21,12 +21,16 @@ export async function exportBackup(): Promise<void> {
     weights: await db.weights.toArray(),
     settings: await db.settings.toArray(),
   }
-  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-  const file = new File([blob], `nutritrack-backup-${today()}.json`, { type: 'application/json' })
-  // Su iPhone il foglio di condivisione permette "Salva su File" / AirDrop / Drive
+  await saveJsonFile(`nutritrack-backup-${today()}.json`, JSON.stringify(data), 'Backup NutriTrack')
+}
+
+/** Su iPhone apre il foglio di condivisione (File, AirDrop, WhatsApp…), altrove scarica il file. */
+export async function saveJsonFile(fileName: string, json: string, title: string): Promise<void> {
+  const blob = new Blob([json], { type: 'application/json' })
+  const file = new File([blob], fileName, { type: 'application/json' })
   if (navigator.canShare?.({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Backup NutriTrack' })
+      await navigator.share({ files: [file], title })
       return
     } catch (e) {
       if ((e as Error).name === 'AbortError') return
@@ -35,7 +39,7 @@ export async function exportBackup(): Promise<void> {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = file.name
+  a.download = fileName
   a.click()
   setTimeout(() => URL.revokeObjectURL(url), 5000)
 }
